@@ -54,3 +54,7 @@ To decode:
 
 $ ./base64 -d -t "U29tZSB0ZXh0IHRvIGVuY29kZQ=="
 $ Some text to encode
+
+
+== READ ALGORITHM PSEUDO HERE ===
+https://base64.guru/learn/base64-algorithm/encode
