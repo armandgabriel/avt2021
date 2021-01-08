@@ -2,111 +2,184 @@ MODEL small
 .STACK 100h
 
 .DATA
-	hello DB 'This program was done by $'
-	author1 DB 'Camner Armand Gabriel$' 
-	author2 DB 'Monica Ioana Vulpe$' 
-	program DB 'Please Read the following table content in order to run the program:'
-	program1 DB 'Base64$'
-	program2 DB 'Vigenere$' 
-	program3 DB 'Playfair$'
+	hello 				DB 'This program was done by $'
+	author1 			DB 'Camner Armand Gabriel$' 
+	author2 			DB 'Monica Ioana Vulpe$' 
+	program 			DB 'Please Read the following table content in order to run the program:'
+	program1 			DB 'Base64$'
+	program2 			DB 'Vigenere$' 
+	program3 			DB 'Playfair$'
+	wtd					DB 'What do you want to do?$'
+	input1 	 			DB 30 dup(1) 
+	;inputBuffer1		DB 30 dup ('$')  
+	;input2 				DB 30 dup(2)
+	;inputBuffer2		DB 30 dup ('$')  
+	;input3 				DB 30 dup(3)
+	;inputBuffer3		DB 30 dup ('$')  
 .CODE
 
 main PROC
-	; MOV DATA into AX registry
+	; ===============================================
+	; ===============================================
+	; 		print   	welcome
+	; ===============================================
+	; ===============================================
 	mov ax, @DATA
 	mov ds, ax
 	LEA dx, hello
-	; 09h to print on screen
 	mov ah, 09h
 	int 21h	
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
 	; mov dl,10 , ah 02h directive to print on new line
 	mov dl, 10		
 	mov ah, 02h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-		
+	; ===============================================
+	; ===============================================
+	; 		print   	AUTHOR1
+	; ===============================================
+	; ===============================================
 	lea dx, author1
 	mov ah, 09h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
 	; mov dl,10 , ah 02h directive to print on new line
 	mov dl, 10		
 	mov ah, 02h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
+	; ===============================================
+	; ===============================================
+	; 		print   	AUTHOR2
+	; ===============================================
+	; ===============================================
 	lea dx, author2
 	mov ah, 09h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
-	; mov dl,10 , ah 02h directive to print on new line
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
 	mov dl, 10		
 	mov ah, 02h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
+	; ===============================================
+	; ===============================================
+	; 		print   	PROGRAM
+	; ===============================================
+	; ===============================================
 	lea dx, program
 	mov ah, 09h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
 	; mov dl,10 , ah 02h directive to print on new line
 	mov dl, 10		
 	mov ah, 02h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
+	; ===============================================
+	; ===============================================
+	; 		print   	PROGRAM1
+	; ===============================================
+	; ===============================================
 	lea dx, program1
 	mov ah, 09h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
-	; mov dl,10 , ah 02h directive to print on new line
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
 	mov dl, 10		
 	mov ah, 02h
 	int 21h
-	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
+	; ===============================================
+	; ===============================================
+	; 		print   	PROGRAM2
+	; ===============================================
+	; ===============================================
 	lea dx, program2
 	mov ah, 09h
 	int 21h
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
+	mov dl, 10		
+	mov ah, 02h
+	int 21h
+	; ===============================================
+	; ===============================================
+	; 		print   	PROGRAM3
+	; ===============================================
+	; ===============================================
+	lea dx, program3
+	mov ah, 09h
+	int 21h
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
+	mov dl, 10		
+	mov ah, 02h
+	int 21h
+	; ===============================================
+	; ===============================================
+	; 		print   	wtd
+	; ===============================================
+	; ===============================================
+	lea dx, wtd
+	mov ah, 09h
+	int 21h
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
+	mov dl, 10		
+	mov ah, 02h
+	int 21h
+	; ===============================================
+	; ===============================================
+	; 		READ   	input1
+	; ===============================================
+	; ===============================================
+	lea si, input1
+	mov ah, 01H
+READ_LOOP:
+	int 21h
+	mov [si],al
+	inc si
+	CMP AL,0DH ;;;;;;;;;;;cariage return = 0dh or 13
+	jz SHOW
+	jmp READ_LOOP
 	
-	; empty the dx registry in order to print new line
-	xor dx,dx
 	
-	; mov dl,10 , ah 02h directive to print on new line
+SHOW:
+	lea input1, AX
+	; ===============================================
+	; ===============================================
+	; 		print   	NEW LINE
+	; ===============================================
+	; ===============================================
 	mov dl, 10		
 	mov ah, 02h
 	int 21h
 	
-	; empty the dx registry in order to print new line
-	xor dx,dx
-	
-	lea dx, program3
+	lea dx, input1
 	mov ah, 09h
 	int 21h	
 	
