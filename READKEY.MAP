@@ -1,0 +1,12 @@
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00000H 00000H READKEY_TEXT       CODE
+ 00000H 00000H 00000H _DATA              DATA
+ 00000H 00099H 0009AH DATAM              
+ 000A0H 0011FH 00080H STACKSEGMENTM      
+ 00120H 001F8H 000D9H CODM               
+
+Program entry point at 0012:0000
+Warning: No stack
+
