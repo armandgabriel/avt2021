@@ -1,6 +1,6 @@
 .model large
 DATAM SEGMENT
-	hello 				DB 'This program was done by $'
+	hello 				DB 'This program was done by$' ;0000 0000 
 	author1 			DB 'Camner Armand Gabriel$' 
 	author2 			DB 'Monica Ioana Vulpe$' 
 	program 			DB 'Programs:$'
@@ -8,69 +8,65 @@ DATAM SEGMENT
 	program2 			DB 'Vigenere$' 
 	program3 			DB 'Playfair$'
 	wtd					DB 'What do you want to do?$'
-	input1 	 			DB 16 dup(1) 
-	input2				DB 16 dup(2)
-	input3				DB 16 dup(3)
+	mode 	 			DB 1
+	PLAINTEXT			DB 16 dup(2)
+	FILENAME			DB 12 dup(5)
 DATAM ENDS
 
 STACKSEGMENTM SEGMENT
-	DW 100 dup (?)
-	startStack label word ; eticheta de 2 bytes ( 16 ) biti care indica adreasa 0000
+	startStack label word  ; eticheta de 2 bytes ( 16 ) biti care indica adreasa 0000
+	DW 64 dup (1)
 STACKSEGMENTM ENDS
 
 
 CODM SEGMENT
 ASSUME CS:CODM,SS:STACKSEGMENTM,DS:DATAM
 START:
-	MOV AX, DATAM
+	MOV AX, SEG DATAM
 	MOV DS, AX
 	
-	MOV AX, STACKSEGMENTM
+	MOV AX, SEG STACKSEGMENTM
 	MOV SS, AX
-	lea AX, startStack 
+	MOV AX, OFFSET startStack  	;LEA SP, startStack 			; = MOV SP, OFFSET startStack 
 	MOV SP, AX
 	
-	MOV AX,  DATAM           	;0
-	PUSH AX
-	LEA AX, input1				;1
-	PUSH AX
+	MOV AX, SEG DATAM           ;0
+	PUSH AX						;stores 16 bit value in the stack.	FFFE 2
+
+	LEA AX, hello				;1
+	PUSH AX						;stores 16 bit value in the stack.	FFFC, 4
 	
-	;MOV AX, SEG DATAM			;2
-	;PUSH AX
-	;LEA AX, input2				;3
-	;PUSH AX
+	LEA AX, author1
+	PUSH AX						; FFFA	6
 	
-	;MOV AX, SEG DATAM			;4
-	;PUSH AX
-	;LEA AX, input3				;5
-	;PUSH AX
+	LEA AX, author2
+	PUSH AX						; FFF8  8
 	
-	;MOV AX, SEG DATAM			;6	
-	;PUSH AX
+	LEA AX, PROGRAM
+	PUSH AX						; FFF6 10
 	
-	;LEA AX, hello				;7	
-	;PUSH AX
+	LEA AX, PROGRAM1
+	PUSH AX						; FFF4 12
 	
-	;LEA AX, author1				;8
-	;PUSH AX
+	LEA AX, PROGRAM2
+	PUSH AX						; FFF2 14
 	
-	;LEA AX, author2				;9
-	;PUSH AX
+	LEA AX, PROGRAM3
+	PUSH AX						; FFF0 16
 	
-	;LEA AX, program				;10
-	;PUSH AX
+	LEA AX, wtd
+	PUSH AX						; FFEE 18
 	
-	;LEA AX, program1			;11
-	;PUSH AX
+	LEA AX, mode
+	PUSH AX						; FFEC 20
 	
-	;LEA AX, program2			;12
-	;PUSH AX
+	LEA AX, PLAINTEXT
+	PUSH AX						; FFEA 22
 	
-	;LEA AX, program3			;13
-	;PUSH AX
+	LEA AX, FILENAME
+	PUSH AX						; FFE8 24
 	
-	;LEA AX, wtd					;14
-	;PUSH AX
+	; push cs 					  FFE6 26
 		
 	CALL FAR PTR ABOUT
 	CALL PRINTNEWLINE
@@ -78,17 +74,94 @@ START:
 
 
 ABOUT PROC FAR
-	PUSH BP
+	PUSH BP				; FFFA-2 = FFF8 				28  OFFSET DATAM, 30 OFFSET HELLO
 	MOV BP, SP
-	LEA DX, SS:[BP+1]
+	
+	LEA DX, DS:[hello]   ;8
 	MOV ah, 09h
 	INT 21h	
-	POP BP
-	CALL PRINTNEWLINE
-	PUSH BP
-	LEA DX, SS:[BP+2]
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	LEA DX, DS:[author1]
 	MOV ah, 09h
 	INT 21h	
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	LEA DX, DS:[author2]
+	MOV ah, 09h
+	INT 21h	
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	LEA DX, DS:[program]
+	MOV ah, 09h
+	INT 21h	
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	
+	LEA DX, DS:[program1]
+	MOV ah, 09h
+	INT 21h	
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	LEA DX, DS:[program2]
+	MOV ah, 09h
+	INT 21h	
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	LEA DX, DS:[program3]
+	MOV ah, 09h
+	INT 21h	
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	LEA DX, DS:[wtd]
+	MOV ah, 09h
+	INT 21h	
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	; ===============================================
+	; ===============================================
+	; 		READ   	input1
+	; ===============================================
+	; ===============================================	
+	lea si, DS:[mode]
+	mov ah, 01H
+	int 21h
+	
+	mov mode, al
+	
+	MOV DL, 10		
+	MOV ah, 02h
+	INT 21h
+	
+	LEA DX, mode
+	MOV ah, 09h
+	INT 21h	
+	
+	
 	
 	POP BP
 	RETF 
